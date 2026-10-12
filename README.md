@@ -1,12 +1,54 @@
-# Chumreap OS — sandbox (international edition)
+# Chumreap OS — international edition
 
 > This repo is the **international edition**: the jurisdiction-neutral core, for global
 > release. The Cambodia deployment — localized vendors, real operations, the beta
 > channel — is kept private and is not part of this repo.
 
-The working demo behind the cocktail party. One loop, ruthlessly small:
+**What this is:** a care-coordination loop for one hard problem — an older person living
+alone, and a family member far away who worries. A printed QR code on the fridge, the
+front door, the pill box. The resident scans it, taps once, and the event lands in a
+shared ledger while the family gets a quiet digest. No app to install, no account for
+the resident, no wearable to charge.
 
-**scan QR → action page → tap → event in ledger → notification dispatched → admin sees it live.**
+**What it does, concretely:**
+- **Check-ins** — "I'm back" door taps, gym returns, morning-meds confirmations.
+- **Requests** — groceries, dinner, help — routed to whoever fulfills them.
+- **Silence watches** — the pattern notices what's *missing*: no meds scan by mid-morning,
+  out without a return by night, and nudges the family. Absence is the signal.
+- **A ledger, not a feed** — every event is an append-only row with a timestamp. The family
+  reads a diary, not a dashboard.
+- **Tiered alerts** — routine events stay quiet; help requests push immediately.
+
+**Why it's different from every care-tech platform:**
+- **No server, no DevOps, no app — if you don't want them.** The no-code family mode
+  (see `NO-CODE.md`) runs on Google Forms + Google Sheets + a tiny scheduled watcher,
+  all free tiers. The resident needs nothing but a phone camera.
+- **One primitive.** QR → event → ledger → alert. Everything else is configuration, not
+  features. Platforms bloat; this refuses to.
+- **A signpost, not a provider.** The architecture deliberately never touches medical
+  advice, emergency dispatch, money, or medication handling. It logs and routes; licensed
+  humans do the rest. That liability tunnel is the design, not a gap.
+- **Individual-first.** A single family can deploy it for one apartment without any
+  institution's permission. Operators scale it to buildings later.
+- **No telemetry, no back door.** Forks are independent by construction (see
+  `OPERATORS.md`). Nobody can see your residents from here, and nobody wants to.
+
+**Multitenant by configuration, not by rewrite.** One codebase serves many buildings
+because tenancy is data, not code: the kit/code taxonomy (`<project>:<site>:<station>:<action>`)
+scopes every event to its building and resident; `routes.json` maps events to per-site
+channels and recipients; the `deployment/` folder carries the per-jurisdiction
+tax, legal, licensing, and privacy layer. To run a second building you copy the
+configuration, translate the interface, and contract local vendors — you don't fork the
+engine. `FORKING.md` is the full localization path; `OPERATORS.md` is the voluntary
+registry where operators list themselves.
+
+**Track an elder from afar with no code.** You don't have to run the server at all:
+print the QR codes, point them at a Google Form, share the Google Sheet with the family,
+and run the watcher on any free scheduler. The family writes zero code and installs
+nothing; the far-away daughter reads a digest in the chat app she already uses.
+`NO-CODE.md` documents the whole pattern. When one watcher serves many families — or you
+want per-building routing and a live admin feed — the self-hosted server below is the
+same loop with more control.
 
 ## Disclaimer
 
